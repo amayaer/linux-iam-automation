@@ -1,0 +1,47 @@
+system_groups: 
+  - name: admins
+  - name: developers
+  - name: auditors
+  - name: helpdesk
+  - name: deployers
+  - name: contractors
+
+users: 
+  - name: doyleb
+    comment: "Bryan Doyle"
+    secondary_groups: [deployers]
+  - name: shannonj
+    comment: "Josie Shannon"
+    secondary_groups: [admins]
+  - name: murraye
+    comment: "Emily Murray"
+    secondary_groups: [helpdesk, auditors]
+  - name: muellero
+    comment: "Oscar Mueller"
+    secondary_groups: [developers]
+  - name: dugank
+    comment: "Kristie Dugan"
+    secondary_groups: [developers, deployers]
+  - name: contrerass
+    comment: "Sergio Contreras"
+    secondary_groups: [helpdesk]
+  - name: morrisonj
+    comment: "Janelle Morrison"
+    secondary_groups: [auditors, contractors]
+  - name: neall
+    comment: "Link Neal"
+    secondary_groups: [deployers]
+  - name: mclaughlinr
+    comment: "Rhett McLaughlin"
+    secondary_groups: [contractors]
+  - name: grossk
+    comment: "Kate Gross"
+    secondary_groups: [admins]
+
+system_accounts: 
+  - name: svc-backup
+    shell: /sbin/nologin
+    system: true
+    create_home: false
+
+

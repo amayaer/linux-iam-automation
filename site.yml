@@ -1,0 +1,6 @@
+- name: Provision users and groups
+  hosts: all
+  become: true
+
+  tasks: Create users
+  
