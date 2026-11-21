@@ -2,5 +2,42 @@
   hosts: all
   become: true
 
-  tasks: Create users
+  tasks:
+    - name: Read existing accounts
+      ansible.builtin.getent:
+        database: passwd
+
+    - name: Ensure groups exist
+      ansible.builtin.group:
+        name: "{{ item.name }}"
+        state: present
+      loop: "{{ system_groups }}"
+
+    - name: Ensure users exist and are assigned to groups
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        comment: "{{ item.comment | default(omit) }}"
+        groups: "{{ item.secondary_groups }}"
+        append: true
+        update_password: on_create
+        expires: "{{ item.expires | default(omit) }}"
+        password_expire_max: "{{ item.password_expire_max | default(omit) }}"
+        password: "{{ lookup('password', password_dir ~ '/temp-passwords/' ~ item.name ~ '_password length=20 chars=ascii_letters,digits') | password_hash('sha512', rounds=100000) }}"
+        state: present
+      loop: "{{ system_users }}"
+
+    - name: Require new users to change password at first login
+      ansible.builtin.command: 
+        cmd: "/usr/bin/chage -d 0 {{ item.name }}"
+      loop: "{{ system_users }}"
+      when: item.name not in ansible_facts.getent_passwd
+      changed_when: true
+
+    - name: Ensure service accounts exist
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        shell: "{{ item.shell }}"
+        system: "{{ item.system }}"
+        create_home: "{{ item.create_home }}"
+      loop: "{{ service_accounts }}"
   

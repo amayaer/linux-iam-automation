@@ -6,7 +6,7 @@ system_groups:
   - name: deployers
   - name: contractors
 
-users: 
+system_users: 
   - name: doyleb
     comment: "Bryan Doyle"
     secondary_groups: [deployers]
@@ -28,20 +28,26 @@ users:
   - name: morrisonj
     comment: "Janelle Morrison"
     secondary_groups: [auditors, contractors]
+    expires: 1806537600
+    password_expire_max: 60
   - name: neall
     comment: "Link Neal"
     secondary_groups: [deployers]
   - name: mclaughlinr
     comment: "Rhett McLaughlin"
     secondary_groups: [contractors]
+    expires: 1817078400
+    password_expire_max: 60
   - name: grossk
     comment: "Kate Gross"
     secondary_groups: [admins]
 
-system_accounts: 
+service_accounts: 
   - name: svc-backup
     shell: /sbin/nologin
     system: true
     create_home: false
+
+password_dir: "{{ lookup('ansible.builtin.env', 'HOME') }}"
 
 
