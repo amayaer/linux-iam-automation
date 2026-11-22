@@ -50,6 +50,15 @@
         mode: '0440'
         validate: /usr/sbin/visudo -cf %s
 
+    - name: Allow helpdesk to run account-support commands
+      ansible.builtin.template: 
+        src: helpdesk_sudoers.j2
+        dest: /etc/sudoers.d/helpdesk
+        owner: root
+        group: root
+        mode: '0440'
+        validate: /usr/sbin/visudo -cf %s
+
     - name: Allow deployers to restart approved services
       ansible.builtin.copy: 
         dest: /etc/sudoers.d/deployers

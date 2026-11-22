@@ -1,0 +1,17 @@
+#{{ ansible_managed }}
+
+%helpdesk ALL=/usr/bin/chage -d 0 *
+%helpdesk ALL=/usr/bin/passwd -u *
+%helpdesk ALL=/usr/bin/chage -l *
+
+{% for user in system_users -%}
+{% if 'admins' in user.secondary_groups -%} 
+%helpdesk ALL=!/usr/bin/chage -d 0 {{ user.name }}
+%helpdesk ALL=!/usr/bin/passwd -u {{ user.name }}
+%helpdesk ALL=!/usr/bin/chage -l {{ user.name }}
+{% endif -%} 
+{% endfor -%}
+
+%helpdesk ALL=!/usr/bin/chage -d 0 root
+%helpdesk ALL=!/usr/bin/passwd -u root
+%helpdesk ALL=!/usr/bin/chage -l root
