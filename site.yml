@@ -40,4 +40,39 @@
         system: "{{ item.system }}"
         create_home: "{{ item.create_home }}"
       loop: "{{ service_accounts }}"
+
+    - name: Grant the admins group full sudo access
+      ansible.builtin.copy: 
+        dest: /etc/sudoers.d/admins
+        content: "%admins ALL=(ALL) ALL\n"
+        owner: root
+        group: root
+        mode: '0440'
+        validate: /usr/sbin/visudo -cf %s
+
+    - name: Allow deployers to restart approved services
+      ansible.builtin.copy: 
+        dest: /etc/sudoers.d/deployers
+        content: |
+          %deployers ALL=/usr/bin/systemctl restart chronyd.service
+          %deployers ALL=/usr/bin/systemctl restart bluetooth.service
+          %deployers ALL=/usr/bin/systemctl restart cups.service
+        owner: root
+        group: root
+        mode: '0440'
+        validate: /usr/sbin/visudo -cf %s
+
+    - name: Set audit log group to auditors
+      ansible.builtin.lineinfile: 
+        path: /etc/audit/auditd.conf
+        regexp: '^log_group\s*='
+        line: 'log_group = auditors'
+      notify: Restart auditd
+
+  handlers: 
+    - name: Restart auditd
+      ansible.builtin.command:
+        cmd: /usr/sbin/service auditd restart
+
+
   
