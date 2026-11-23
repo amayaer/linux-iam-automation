@@ -23,7 +23,7 @@ Service account:
  
 `audit-users.sh` is a read-only report that checks each account. 
 
-Checks:
+### Checks:
 - **UID 0 accounts:** Any account other than root that has UID 0.
 - **Locked accounts:** Regular user accounts (UID 1000 and up) that are locked.
 
